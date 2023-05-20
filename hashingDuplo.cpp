@@ -112,8 +112,11 @@ int main() {
         return 1;
     }
 
+    std::cout << "Arquivo selecionado: " << inputFile << std::endl;
+
     int size;
     inFile >> size;  // Tamanho da tabela hash
+    cout << "Tamanho da tabela: " << size << endl;
 
     // Inicializar a tabela hash com -1 para indicar posições vazias
     vector<int> hashTable(size, -1);
