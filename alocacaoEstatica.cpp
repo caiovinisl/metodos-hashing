@@ -25,13 +25,14 @@ void insert(Node** table, int size, int value) {
     if (table[index] == nullptr) {
         table[index] = newNode;
     } else {
-        Node* curr = table[index];
-        while (curr->next != nullptr) {
-            curr = curr->next;
+        int nextIndex = size - 1;
+        while (table[nextIndex] != nullptr) {
+            nextIndex = (nextIndex - 1 + size) % size;
         }
-        curr->next = newNode;
+        table[nextIndex] = newNode;
     }
 }
+
 
 void printTable(Node** table, int size) {
     for (int i = 0; i < size; i++) {
