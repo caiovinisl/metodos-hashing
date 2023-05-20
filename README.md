@@ -67,7 +67,7 @@ $ cd metodos-hashing
 # Se você deixar esse arquivo vazio ele irá executar aleatóriamente alguma das entradas do diretório ./entradas.
 
 # Compile o código com o método de hashing desejado
-$ gcc alocacaoEstatica.cpp -o alocacaoEstatica
+$ g++ alocacaoEstatica.cpp -std=c++17 -o alocacaoEstatica
 
 # Execute o código
 $ alocacaoEstatica.exe
