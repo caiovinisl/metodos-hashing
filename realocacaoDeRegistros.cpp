@@ -13,11 +13,13 @@ class HashTable {
 private:
     vector<int> table;
     int size;
+    int numElements;
 
 public:
     HashTable(int m) {
         size = m;
         table.resize(size, -1);  // Inicializa a tabela com -1 em todas as posições
+        numElements = 0;
     }
 
     int hash(int key) {
@@ -37,6 +39,7 @@ public:
         }
 
         table[index] = key;
+        numElements++;
     }
 
     void printTable() {
@@ -47,6 +50,10 @@ public:
                 cout << "Index " << i << ": " << " " << endl;
             }
         }
+    }
+
+    double calculateLoadFactor() {
+        return static_cast<double>(numElements) / size;
     }
 };
 
@@ -119,6 +126,9 @@ int main() {
 
     cout << "Tabela Hash:" << endl;
     hashtable.printTable();
+
+    double loadFactor = hashtable.calculateLoadFactor();
+    cout << "Fator de Carga: " << loadFactor << endl;
 
     inFile.close();
 

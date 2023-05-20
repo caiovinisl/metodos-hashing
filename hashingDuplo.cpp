@@ -119,14 +119,20 @@ int main() {
     vector<int> hashTable(size, -1);
 
     int key;
+    int numElements = 0;  // Contador de elementos inseridos
+
     while (inFile >> key)
     {
         // Inserir valores na tabela hash
         insert(hashTable, key, size);
+        numElements++;
     }
 
     cout << "Tabela Hash:" << endl;
     printTable(hashTable, size);
+
+    double loadFactor = static_cast<double>(numElements) / size;
+    cout << "Fator de Carga: " << loadFactor << endl;
 
     inFile.close();
 

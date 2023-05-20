@@ -81,6 +81,22 @@ bool isFileEmpty(const std::string& filePath) {
     return file.peek() == std::ifstream::traits_type::eof();
 }
 
+int countElements(Node** table, int size) {
+    int count = 0;
+    for (int i = 0; i < size; i++) {
+        Node* curr = table[i];
+        while (curr != nullptr) {
+            count++;
+            curr = curr->next;
+        }
+    }
+    return count;
+}
+
+float calculateLoadFactor(int numElements, int size) {
+    return static_cast<float>(numElements) / size;
+}
+
 int main() {
     std::string directory = "entradas";
     std::string inputFile = "entrada.txt";
@@ -125,7 +141,11 @@ int main() {
 
     cout << "Tabela Hash:" << endl;
     printTable(table, size);
-
+    
+    int numElements = countElements(table, size);
+    float loadFactor = calculateLoadFactor(numElements, size);
+    cout << "Fator de carga: " << loadFactor << endl;
+    
     inFile.close();
 
     return 0;
