@@ -114,8 +114,11 @@ int main() {
         return 1;
     }
 
+    std::cout << "Arquivo selecionado: " << inputFile << std::endl;
+
     int size;
     inFile >> size;
+    cout << "Tamanho da tabela: " << size << endl;
 
     HashTable hashtable(size);
 
