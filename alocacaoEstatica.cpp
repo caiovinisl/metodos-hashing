@@ -76,9 +76,25 @@ std::string getRandomFile(const std::string& directory) {
     return fileNames[randomIndex];
 }
 
+bool isFileEmpty(const std::string& filePath) {
+    std::ifstream file(filePath);
+    return file.peek() == std::ifstream::traits_type::eof();
+}
+
 int main() {
     std::string directory = "entradas";
-    std::string inputFile = directory + "/" + getRandomFile(directory);
+    std::string inputFile = "entrada.txt";
+
+    // Verifica se o arquivo "entrada.txt" está vazio
+    if (isFileEmpty(inputFile)) {
+        std::string randomFile = getRandomFile(directory);
+        if (randomFile.empty()) {
+            std::cout << "Nenhum arquivo válido encontrado no diretório." << std::endl;
+            return 1;
+        }
+
+        inputFile = directory + "/" + randomFile;
+    }
 
     ifstream inFile(inputFile);
     if (!inFile.is_open()) {
