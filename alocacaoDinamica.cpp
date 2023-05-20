@@ -9,53 +9,41 @@ using namespace std;
 
 namespace fs = std::filesystem;
 
-class HashTable {
-private:
-    vector<int> table;
-    int size;
-    int numElements;
+const int MAX_SIZE = 1000;
 
-public:
-    HashTable(int m) {
-        size = m;
-        table.resize(size, -1);  // Inicializa a tabela com -1 em todas as posições
-        numElements = 0;
-    }
-
-    int hash(int key) {
-        return key % size;  // Função de hash simples usando o operador de resto (%)
-    }
-
-    int probe(int key, int i) {
-        return (hash(key) + i) % size;  // Técnica de linear probing para resolução de colisões
-    }
-
-    void insert(int key) {
-        int i = 0;
-        int index = hash(key);
-
-        while (table[index] != -1) {
-            index = probe(key, ++i);  // Encontra a próxima posição disponível usando linear probing
-        }
-
-        table[index] = key;
-        numElements++;
-    }
-
-    void printTable() {
-        for (int i = 0; i < size; i++) {
-            if (table[i] != -1) {
-                cout << "Index " << i << ": " << table[i] << endl;
-            } else { 
-                cout << "Index " << i << ": " << " " << endl;
-            }
-        }
-    }
-
-    double calculateLoadFactor() {
-        return static_cast<double>(numElements) / size;
-    }
+struct Node {
+    int data;
+    Node* next;
 };
+
+void insert(Node** table, int size, int value) {
+    int index = value % size;
+    Node* newNode = new Node;
+    newNode->data = value;
+    newNode->next = nullptr;
+
+    if (table[index] == nullptr) {
+        table[index] = newNode;
+    } else {
+        Node* curr = table[index];
+        while (curr->next != nullptr) {
+            curr = curr->next;
+        }
+        curr->next = newNode;
+    }
+}
+
+void printTable(Node** table, int size) {
+    for (int i = 0; i < size; i++) {
+        cout << "Index " << i << ": ";
+        Node* curr = table[i];
+        while (curr != nullptr) {
+            cout << curr->data << " ";
+            curr = curr->next;
+        }
+        cout << endl;
+    }
+}
 
 std::string getRandomFile(const std::string& directory) {
     std::vector<std::string> fileNames;
@@ -93,6 +81,22 @@ bool isFileEmpty(const std::string& filePath) {
     return file.peek() == std::ifstream::traits_type::eof();
 }
 
+int countElements(Node** table, int size) {
+    int count = 0;
+    for (int i = 0; i < size; i++) {
+        Node* curr = table[i];
+        while (curr != nullptr) {
+            count++;
+            curr = curr->next;
+        }
+    }
+    return count;
+}
+
+float calculateLoadFactor(int numElements, int size) {
+    return static_cast<float>(numElements) / size;
+}
+
 int main() {
     std::string directory = "entradas";
     std::string inputFile = "entrada.txt";
@@ -119,20 +123,29 @@ int main() {
     int size;
     inFile >> size;
     cout << "Tamanho da tabela: " << size << endl;
+    if (size <= 0 || size > MAX_SIZE) {
+        cout << "Tamanho inválido para a tabela." << endl;
+        inFile.close();
+        return 1;
+    }
 
-    HashTable hashtable(size);
+    Node* table[MAX_SIZE];
+    for (int i = 0; i < size; i++) {
+        table[i] = nullptr;
+    }
 
     int value;
     while (inFile >> value) {
-        hashtable.insert(value);
+        insert(table, size, value);
     }
 
     cout << "Tabela Hash:" << endl;
-    hashtable.printTable();
-
-    double loadFactor = hashtable.calculateLoadFactor();
-    cout << "Fator de Carga: " << loadFactor << endl;
-
+    printTable(table, size);
+    
+    int numElements = countElements(table, size);
+    float loadFactor = calculateLoadFactor(numElements, size);
+    cout << "Fator de carga: " << loadFactor << endl;
+    
     inFile.close();
 
     return 0;
