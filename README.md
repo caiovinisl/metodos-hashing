@@ -62,7 +62,9 @@ $ git clone https://github.com/caiovinisl/metodos-hashing.git
 # Acesse a pasta do projeto no terminal/cmd
 $ cd metodos-hashing
 
-# Acesse o arquivo 'entrada.txt' do projeto e insira sua entrada. Se você deixar esse arquivo vazio ele irá executar aleatóriamente alguma das entradas do diretório ./entradas.
+# Acesse o arquivo 'entrada.txt' do projeto e insira sua entrada.
+# A primeira linha conterá o tamanho m da tabela hashing e as demais os n < m valores a serem incluídos na tabela.
+# Se você deixar esse arquivo vazio ele irá executar aleatóriamente alguma das entradas do diretório ./entradas.
 
 # Compile o código com o método de hashing desejado
 $ gcc alocacaoEstatica.cpp -o alocacaoEstatica
