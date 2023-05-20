@@ -123,6 +123,7 @@ int main() {
         insert(table, size, value);
     }
 
+    cout << "Tabela Hash:" << endl;
     printTable(table, size);
 
     inFile.close();

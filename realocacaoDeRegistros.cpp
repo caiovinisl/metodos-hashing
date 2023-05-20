@@ -1,8 +1,13 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <string>
+#include <random>
+#include <filesystem>
 
 using namespace std;
+
+namespace fs = std::filesystem;
 
 class HashTable {
 private:
@@ -34,36 +39,88 @@ public:
         table[index] = key;
     }
 
-    void display() {
+    void printTable() {
         for (int i = 0; i < size; i++) {
             if (table[i] != -1) {
                 cout << "Index " << i << ": " << table[i] << endl;
+            } else { 
+                cout << "Index " << i << ": " << " " << endl;
             }
         }
     }
 };
 
-int main() {
-    ifstream inputFile("entrada.txt");
+std::string getRandomFile(const std::string& directory) {
+    std::vector<std::string> fileNames;
+    
+    // Percorre todos os arquivos do diretório
+    for (const auto& entry : fs::directory_iterator(directory)) {
+        if (entry.is_regular_file()) {
+            std::string fileName = entry.path().filename().string();
+            
+            // Verifica se o formato do nome do arquivo está correto
+            if (fileName.length() >= 13 && fileName.substr(fileName.length() - 10) == "-input.txt") {
+                fileNames.push_back(fileName);
+            }
+        }
+    }
+    
+    // Verifica se existem arquivos que seguem o formato especificado
+    if (fileNames.empty()) {
+        std::cout << "Nenhum arquivo válido encontrado no diretório." << std::endl;
+        return "";
+    }
+    
+    // Gera um índice aleatório para selecionar um arquivo
+    std::random_device rd;
+    std::mt19937 rng(rd());
+    std::uniform_int_distribution<int> uni(0, fileNames.size() - 1);
+    int randomIndex = uni(rng);
+    
+    // Retorna o nome do arquivo selecionado
+    return fileNames[randomIndex];
+}
 
-    if (!inputFile.is_open()) {
-        cout << "Erro ao abrir o arquivo de entrada." << endl;
-        return 0;
+bool isFileEmpty(const std::string& filePath) {
+    std::ifstream file(filePath);
+    return file.peek() == std::ifstream::traits_type::eof();
+}
+
+int main() {
+    std::string directory = "entradas";
+    std::string inputFile = "entrada.txt";
+
+    // Verifica se o arquivo "entrada.txt" está vazio
+    if (isFileEmpty(inputFile)) {
+        std::string randomFile = getRandomFile(directory);
+        if (randomFile.empty()) {
+            std::cout << "Nenhum arquivo válido encontrado no diretório." << std::endl;
+            return 1;
+        }
+
+        inputFile = directory + "/" + randomFile;
     }
 
-    int m;
-    inputFile >> m;
+    ifstream inFile(inputFile);
+    if (!inFile.is_open()) {
+        cout << "Erro ao abrir o arquivo de entrada: " << inputFile << endl;
+        return 1;
+    }
 
-    HashTable hashtable(m);
+    int size;
+    inFile >> size;
+
+    HashTable hashtable(size);
 
     int value;
-    while (inputFile >> value) {
+    while (inFile >> value) {
         hashtable.insert(value);
     }
 
-    inputFile.close();
+    cout << "Tabela Hash:" << endl;
+    hashtable.printTable();
 
-    hashtable.display();
+    inFile.close();
 
     return 0;
 }
