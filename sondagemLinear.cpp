@@ -65,7 +65,7 @@ public:
     }
 
     double medianEntries(){
-        return static_cast<double>(entries) / size;
+        return static_cast<double>(entries) / count;
     }
 };
 
