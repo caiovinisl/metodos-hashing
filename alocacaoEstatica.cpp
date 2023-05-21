@@ -16,7 +16,8 @@ struct Node {
     Node* next;
 };
 
-void insert(Node** table, int size, int value) {
+int insert(Node** table, int size, int value) {
+    int i = 1;
     int index = value % size;
     Node* newNode = new Node;
     newNode->data = value;
@@ -28,9 +29,12 @@ void insert(Node** table, int size, int value) {
         int nextIndex = size - 1;
         while (table[nextIndex] != nullptr) {
             nextIndex = (nextIndex - 1 + size) % size;
+            i++;
         }
+        i++;
         table[nextIndex] = newNode;
     }
+    return i;
 }
 
 
@@ -98,6 +102,10 @@ float calculateLoadFactor(int numElements, int size) {
     return static_cast<float>(numElements) / size;
 }
 
+double calculateMedianEntries(int entries, int numElem){
+    return static_cast<double>(entries) / numElem;
+}
+
 int main() {
     std::string directory = "entradas";
     std::string inputFile = "entrada.txt";
@@ -136,8 +144,9 @@ int main() {
     }
 
     int value;
+    int entries = 0;
     while (inFile >> value) {
-        insert(table, size, value);
+        entries += insert(table, size, value);
     }
 
     cout << "Tabela Hash:" << endl;
@@ -145,7 +154,12 @@ int main() {
     
     int numElements = countElements(table, size);
     float loadFactor = calculateLoadFactor(numElements, size);
+    double medianEntries = calculateMedianEntries(entries, numElements);
+
     cout << "Fator de carga: " << loadFactor << endl;
+
+    cout << "Média de acessos: " << medianEntries << endl;
+
     
     inFile.close();
 

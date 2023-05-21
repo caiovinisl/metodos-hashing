@@ -14,12 +14,14 @@ private:
     vector<int> table;
     int size;
     int count; // Contador de elementos na tabela
+    int entries;
     
 public:
     HashTable(int m) {
         size = m;
         table.resize(size, -1);
         count = 0;
+        entries = 0;
     }
     
     int hash(int key) {
@@ -36,6 +38,7 @@ public:
         
         do {
             index = probe(key, i);
+            entries++;
             if (table[index] == -1) {
                 table[index] = key;
                 count++;
@@ -59,6 +62,10 @@ public:
     
     double calculateLoadFactor() {
         return static_cast<double>(count) / size;
+    }
+
+    double medianEntries(){
+        return static_cast<double>(entries) / size;
     }
 };
 
@@ -133,6 +140,8 @@ int main() {
     hashtable.printTable();
     
     cout << "Fator de carga: " << hashtable.calculateLoadFactor() << endl;
+
+    cout << "Média de acessos: " << hashtable.medianEntries() << endl;
 
     inFile.close();
     

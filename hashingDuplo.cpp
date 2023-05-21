@@ -24,22 +24,24 @@ int doubleHashing(int key, int i, int size)
 }
 
 // Inserção na tabela hash
-void insert(vector<int>& hashTable, int key, int size)
+int insert(vector<int>& hashTable, int key, int size)
 {
     int index = hashFunction(key, size);
+    int i = 1;
 
     // Verificar se o índice está ocupado
     if (hashTable[index] != -1)
     {
         // Probing até encontrar uma posição vazia
-        int i = 1;
-        while (hashTable[doubleHashing(key, i, size)] != -1)
+        do {
+            index = doubleHashing(key, i, size);
             i++;
-        index = doubleHashing(key, i, size);
+        } while (hashTable[doubleHashing(key, i, size)] != -1);
     }
 
     // Inserir o valor na tabela
     hashTable[index] = key;
+    return i;
 }
 
 // Imprimir a tabela hash
@@ -123,11 +125,12 @@ int main() {
 
     int key;
     int numElements = 0;  // Contador de elementos inseridos
+    int entries = 0;
 
     while (inFile >> key)
     {
         // Inserir valores na tabela hash
-        insert(hashTable, key, size);
+        entries += insert(hashTable, key, size);
         numElements++;
     }
 
@@ -135,7 +138,10 @@ int main() {
     printTable(hashTable, size);
 
     double loadFactor = static_cast<double>(numElements) / size;
+    double medianEntries = static_cast<double>(entries) / numElements;
     cout << "Fator de Carga: " << loadFactor << endl;
+
+    cout << "Média de acessos: " << medianEntries << endl;
 
     inFile.close();
 
