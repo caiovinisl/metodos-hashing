@@ -46,7 +46,7 @@ Projeto desenvolvido durante a matéria MATA54 - Estrutura de Dados II da Univer
 - [x] Aloação Estática
 - [x] Hashing Duplo
 - [x] Sondagem Linear
-- [x] Realocação de Registros
+- [x] Aloação Dinâmica
 
 ---
 
